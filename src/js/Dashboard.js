@@ -21,17 +21,18 @@ export default class Dashboard {
 
         const loadedElements = DashboardState.stateLoad()
 
-        for (let el of loadedElements) {
-            if (el[0] === 'H3') {
-                const addDashBtn = this.parentEl.querySelector('.add-dashboard');
-                addDashBtn.insertAdjacentHTML('beforebegin', dashboardMarkUp(el[1]));
-            } else if (el[0] === 'DIV') {
-                const dashboards = document.body.querySelectorAll('.dashboard');
-                const addTaskBtn = dashboards[dashboards.length-1].querySelector('.add-task');
-                addTaskBtn.insertAdjacentHTML('beforebegin', taskMarkUp(el[1]))
+        if (loadedElements){
+            for (let el of loadedElements) {
+                if (el[0] === 'H3') {
+                    const addDashBtn = this.parentEl.querySelector('.add-dashboard');
+                    addDashBtn.insertAdjacentHTML('beforebegin', dashboardMarkUp(el[1]));
+                } else if (el[0] === 'DIV') {
+                    const dashboards = document.body.querySelectorAll('.dashboard');
+                    const addTaskBtn = dashboards[dashboards.length-1].querySelector('.add-task');
+                    addTaskBtn.insertAdjacentHTML('beforebegin', taskMarkUp(el[1]))
+                }
             }
         }
-
     }
 
     bindToDOM() {    

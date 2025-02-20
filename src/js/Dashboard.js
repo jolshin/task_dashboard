@@ -306,7 +306,6 @@ export default class Dashboard {
                 dashEditActive.classList.remove('dashboard-edit');
                 dashEditActive.classList.add('movable');
 
-                console.log(dashEditActive.querySelector('.add-task'))
                 if (!dashEditActive.querySelector('.add-task')) {
                     dashEditActive.insertAdjacentHTML('beforeend', addTaskButton())
                 }

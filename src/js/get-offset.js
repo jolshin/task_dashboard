@@ -1,6 +1,4 @@
 export function getCoords(el, e) {
-    console.log(el)
-    console.log(e)
     const rect = el.getBoundingClientRect();
     const clickPosX = e.clientX;
     const clickPosY = e.clientY;

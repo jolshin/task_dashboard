@@ -1,7 +1,7 @@
 import DashboardState from "./DashboardSate";
 
 import { getCoords } from "./get-offset";
-import { addDashButton, addTaskButton, taskMarkUp, dashboardMarkUp, expandTasksStyle, expandDashboardsMarkup, editTask, editDashboard } from "./markups";
+import { addDashButton, addTaskButton, taskMarkUp, dashboardMarkUp, expandTasksStyle, expandDashboardsMarkup, addTask, addDashboard } from "./markups";
 
 export default class Dashboard {
     constructor(parentEl) {
@@ -63,7 +63,6 @@ export default class Dashboard {
     }
 
     onMouseDown(e) {
-        e.preventDefault();
 
         this.movable = e.target.closest('.movable');
         const stopList = ['add-btn', 'add-task', 'btn', 'task-edit', 'dashboard-edit', 'text-input', 'edit']
@@ -71,6 +70,7 @@ export default class Dashboard {
         
         if (stopList.filter(element => elClassList.contains(element)).length === 0 && this.movable) {
 
+            e.preventDefault();
             this.editAndClose()
 
             const movablePosiiton = getCoords(this.movable, e)
@@ -198,27 +198,29 @@ export default class Dashboard {
 
         const activeElement = e.target;
 
-        if (!activeElement.classList.contains('text-input')) {
+
+
+        if (!activeElement.classList.contains('text-input') && !activeElement.classList.contains('edit')) {
             this.editAndClose()
+        
+            if (activeElement.classList.contains('add-dashboard')) {
+                activeElement.insertAdjacentHTML('beforebegin', addDashboard());
+                activeElement.style.display = "none";
+                this.activeParent = activeElement.parentElement;
+                this.activeParent.querySelector('.text-input').focus();
+            } else if (activeElement.classList.contains('add-task')) {
+                activeElement.insertAdjacentHTML('beforebegin', addTask());
+                activeElement.style.display = "none";
+                this.activeParent = activeElement.parentElement;
+                this.activeParent.querySelector('.text-input').focus();
+            } else if (activeElement.classList.contains('close')) {
+                this.closeElement(activeElement.parentElement);
+            } 
 
-        if (activeElement.classList.contains('add-dashboard')) {
-            activeElement.insertAdjacentHTML('beforebegin', editDashboard());
-            document.body.querySelector('.add-dashboard').style.display = "none";
-            this.activeParent = activeElement.parentElement;
-            this.activeParent.querySelector('.text-input').focus();
-        } else if (activeElement.classList.contains('add-task')) {
-            activeElement.insertAdjacentHTML('beforebegin', editTask());
-            activeElement.style.display = "none";
-            this.activeParent = activeElement.parentElement;
-            this.activeParent.querySelector('.text-input').focus();
-        } else if (activeElement.classList.contains('close')) {
-            this.closeElement(activeElement.parentElement);
-        } 
+            this.reassignListeners()
 
-        this.reassignListeners()
-
-        DashboardState.stateSave();
-    }
+            DashboardState.stateSave();
+        }
         
     }
 
@@ -258,18 +260,19 @@ export default class Dashboard {
 
 
     onEditItem(e) {
-        // const el = e.target.parentElement;
-        // console.log(`let's edit ${el}`)
+        const el = e.target.parentElement;
 
-        // if (el.classList.contains('dashboard')) {
-        //     // el.
-        //     // this.activeParent = el.parentElement;
-        //     // this.activeParent.querySelector('.text-input').focus();
-        // } else if (el.classList.contains('task')) {
-        //     el.insertAdjacentHTML('afterend', editTask());
-        //     el.parentElement.querySelector('.text-input').focus();
-        //     this.closeElement(el);
-        // }
+        if (el.classList.contains('dashboard')) {
+            el.classList.add('dashboard-edit')
+            el.classList.remove('movable')
+            el.querySelector('h3').setAttribute('contenteditable', true)
+            el.querySelector('h3').classList.add('text-input')
+            el.querySelector('.text-input').focus();
+        } else if (el.classList.contains('task')) {
+            el.insertAdjacentHTML('afterend', addTask(el.querySelector('.task-card').textContent));
+            el.parentElement.querySelector('.text-input').focus();
+            this.closeElement(el);
+        }
     }
 
     editAndClose() {
@@ -302,7 +305,11 @@ export default class Dashboard {
 
                 dashEditActive.classList.remove('dashboard-edit');
                 dashEditActive.classList.add('movable');
-                dashEditActive.insertAdjacentHTML('beforeend', addTaskButton())
+
+                console.log(dashEditActive.querySelector('.add-task'))
+                if (!dashEditActive.querySelector('.add-task')) {
+                    dashEditActive.insertAdjacentHTML('beforeend', addTaskButton())
+                }
 
                 textInputActive.classList.remove('text-input');
                 textInputActive.removeAttribute('contenteditable');
@@ -315,7 +322,6 @@ export default class Dashboard {
     }
 
     remmoveStyleAttribute(selector) {
-        console.log(`removed ${selector}`)
         const elements = document.body.querySelectorAll(selector);
 
         for (let el of elements) {

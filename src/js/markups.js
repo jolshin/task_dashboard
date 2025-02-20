@@ -43,17 +43,17 @@ export function dashboardMarkUp(content) {
         `
 }
 
-export function editTask() {
+export function addTask(content = '') {
     return `
-        <div class="task-edit task">
+        <div class="task task-edit ">
             <span class="close btn">&times;</span>
             <span class="edit btn" style="display: none;">&hellip;</span>
-            <div class="task-card text-input" contenteditable data-placeholder="Enter a title for this task..."></div>
+            <div class="task-card text-input" contenteditable data-placeholder="Enter a title for this task...">${content}</div>
         </div>
         `
 }
 
-export function editDashboard() {
+export function addDashboard() {
     return `
         <div class="dashboard-edit dashboard">
             <span class="close btn">&times;</span>

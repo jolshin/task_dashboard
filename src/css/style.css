@@ -30,7 +30,6 @@ body {
     margin-left: 2px;
     margin-bottom: 5px;
     word-wrap: break-word;
-
 }
 
 
@@ -108,7 +107,7 @@ body {
 }
 
 .close {
-    font-size: 28px;
+    font-size: 2em;
     color: rgb(63, 63, 63);
     float: right;
     font-weight: bold;
@@ -127,7 +126,7 @@ body {
 }
 
 .edit {
-    font-size: 15px;
+    font-size: 1em;
     color: rgba(74, 74, 74, 0.487);
     float: right;
     font-weight: bold;
